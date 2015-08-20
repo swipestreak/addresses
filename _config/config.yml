@@ -1,0 +1,9 @@
+---
+Name: swipestreak-addresses-config
+---
+Order:
+  extensions:
+    - StreakAddresses_OrderExtension
+OrderForm:
+  extensions:
+    - StreakAddresses_OrderFormExtension
