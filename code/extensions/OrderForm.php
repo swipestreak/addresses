@@ -17,8 +17,6 @@ class StreakAddresses_OrderFormExtension extends Extension {
             'Billing'
         );
 
-        $config = Config::inst();
-
         list($phoneFields, $labels) = CrackerjackModule::get_config_settings(
             'StreakAddresses_PhoneNumbersExtension',
             array('db', 'field_labels')

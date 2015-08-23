@@ -1,14 +1,28 @@
 <?php
 class StreakAddresses_OrderExtension extends DataExtension {
+    private static $db = array(
+        'ShippingStreakPhone' => 'Varchar(32)',
+        'ShippingStreakMobile' => 'Varchar(32)',
+        'BillingStreakPhone' => 'Varchar(32)',
+        'BillingStreakMobile' => 'Varchar(32)'
+    );
+
     public function onBeforePayment() {
         $customer = $this->owner->Member();
         if ($customer && $customer->exists()) {
             $this->updateAddresses($this->owner);
         }
     }
+
+    /**
+     * Adds phone numbers from Order to shipping and billing address records.
+     *
+     * @param $order
+     */
     protected function updateAddresses($order) {
         $data = $order->toMap();
 
+        // this is for matching existing address, we don't match on phone numbers though
         $shippingAddress = Address_Shipping::create(array(
             'MemberID' => $this->owner->Member()->ID,
             'FirstName' => $data['ShippingFirstName'],
@@ -23,6 +37,8 @@ class StreakAddresses_OrderExtension extends DataExtension {
             'CountryCode' => $data['ShippingCountryCode'],
             'RegionName' => (isset($data['ShippingRegionName'])) ? $data['ShippingRegionName'] : null,
             'RegionCode' => (isset($data['ShippingRegionCode'])) ? $data['ShippingRegionCode'] : null,
+            //            'StreakPhone' => (isset($data['ShippingStreakPhone'])) ? $data['ShippingStreakPhone'] : null,
+            //            'StreakMobile' => (isset($data['ShippingStreakMobile'])) ? $data['ShippingStreakMobile'] : null,
         ));
         $newShipping = array_filter($shippingAddress->toMap());
 
@@ -40,6 +56,8 @@ class StreakAddresses_OrderExtension extends DataExtension {
             'CountryCode' => $data['BillingCountryCode'],
             'RegionName' => (isset($data['BillingRegionName'])) ? $data['ShippingRegionName'] : null,
             'RegionCode' => (isset($data['BillingRegionCode'])) ? $data['ShippingRegionCode'] : null,
+            //            'StreakPhone' => (isset($data['BillingStreakPhone'])) ? $data['BillingStreakPhone'] : null,
+            //            'StreakMobile' => (isset($data['BillingStreakMobile'])) ? $data['BillingStreakMobile'] : null,
         ));
         $newBilling = array_filter($billingAddress->toMap());
 
